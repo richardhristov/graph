@@ -1,0 +1,38 @@
+# Visual studio and C#
+.vs
+bin
+obj
+.exe
+
+# Visual studio code
+.vscode
+
+# Cache directories
+__pycache__
+.cache
+
+# Nodejs
+node_modules
+
+# Environment files
+env.*
+.env
+
+# Docker entrypoint database dumps
+docker-entrypoint-initdb.d/*.sql
+docker-entrypoint-initdb.d/*.sql.gz
+
+# Data
+*.db
+/data/
+sessions
+storage
+
+# SSL private keys
+ssl
+
+# Build folders
+build
+
+# Requirements files
+*.req.*

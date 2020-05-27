@@ -1,0 +1,64 @@
+@use "sass:color";
+
+$white: #FFF;
+$black: #000;
+
+$gray-100: hsl(217, 14.27%, 10.27%);
+$gray-200: hsl(217, 14.27%, 20.27%);
+$gray-300: hsl(217, 14.27%, 30.27%);
+$gray-400: hsl(217, 14.27%, 40.27%);
+$gray-500: hsl(217, 14.27%, 50.27%);
+$gray-600: hsl(217, 14.27%, 60.27%);
+$gray-700: hsl(217, 14.27%, 70.27%);
+$gray-800: hsl(217, 14.27%, 80.27%);
+$gray-900: hsl(217, 14.27%, 90.27%);
+
+$red: $black;
+
+$color-primary: $black;
+$color-secondary: $black;
+$color-danger: $black;
+
+$color-black: $black;
+$color-white: $white;
+
+$color-text: $color-black;
+$color-background: $color-white;
+
+// Text
+$font-size-base: 1rem;
+$line-height: 1.5;
+
+$font-size-h1: 3rem;
+$font-size-h2: 2.25rem;
+$font-size-h3: 1.5rem;
+$font-size-h4: 1.5rem;
+$font-size-h5: 1rem;
+$font-size-h6: 1rem;
+
+$font-size-lg: 1.5rem;
+$font-size-sm: 0.85rem;
+
+$font-family: 'Roboto', sans-serif;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+$font-weight-headings: $font-weight-normal;
+
+// Units
+$unit: $font-size-base * $line-height;
+
+@function unit($base) {
+  @return $base * $unit;
+}
+
+// Z-indexes
+$z-index-header: 1000;
+
+// Transition duration
+$transition-fast: .25s;
+$transition-normal: .5s;
+$transition-slow: 1s;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 1024px;

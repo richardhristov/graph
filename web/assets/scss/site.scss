@@ -1,0 +1,97 @@
+//@import "icons/style";
+
+@import "variables";
+
+@import "base/reset.scss";
+@import "base/typography.scss";
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  height: unit(2);
+  background-color: $black;
+  color: $white;
+
+  &__title {
+    margin: 0;
+    text-align: center;
+    height: unit(2);
+  }
+
+  &__left {
+    height: unit(2);
+  }
+
+  &__right {
+    height: unit(2);
+    text-align: right;
+  }
+
+  &__button {
+    outline: none;
+    border: none;
+    height: unit(2);
+    background-color: transparent;
+    color: $white;
+    font-weight: bold;
+    padding: 0 unit(1/2);
+    cursor: pointer;
+    transition: $transition-normal background-color ease-in-out;
+
+    &:hover {
+      background-color: $gray-400;
+    }
+  }
+}
+
+button {
+  display: inline-block;
+  padding: unit(1/4) unit(1/2);
+  color: $white;
+  background-color: $gray-400;
+  border-radius: unit(1/4);
+  cursor: pointer;
+  appearance: none;
+  border: none;
+  margin: 0;
+  font-size: $font-size-base;
+
+  font-family: $font-family;
+  font-weight: $font-weight-normal;
+
+  &:visited {
+    color: $white;
+  }
+
+  &[disabled] {
+    background-color: $gray-700;
+  }
+}
+
+input {
+  border: unit(1/16) solid $gray-400;
+  font-size: $font-size-base;
+
+  font-family: $font-family;
+  font-weight: $font-weight-normal;
+  padding: unit(1/4) unit(1/2);
+}
+
+.main {
+  display: grid;
+  grid-template-rows: 3fr 1fr;
+
+  position: absolute;
+  top: unit(2);
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  &__ui {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin: 0;
+    list-style-type: none;
+  }
+}

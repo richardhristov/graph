@@ -1,0 +1,169 @@
+body {
+  font-size: $font-size-base;
+
+  font-family: $font-family;
+  font-weight: $font-weight-normal;
+
+  line-height: $line-height;
+
+  color: $color-black;
+  background-color: $color-white;
+}
+
+button,
+input {
+  font-family: $font-family;
+  line-height: $line-height;
+}
+
+
+a,
+a:visited {
+  color: $color-primary;
+  text-decoration: none;
+}
+
+a:hover {
+  color: _light($color-primary, -40%);
+}
+
+
+::selection {
+  background-color: $color-primary;
+  color: $color-white;
+}
+
+
+h1,
+.h1 {
+  font-size: font-size($font-size-h1);
+  font-weight: $font-weight-headings;
+  margin: 0;
+  margin-top: unit(1/4);
+  margin-bottom: unit(1/2);
+}
+h2,
+.h2 {
+  font-size: font-size($font-size-h2);
+  font-weight: $font-weight-headings;
+  margin: 0;
+  margin-top: unit(1/4);
+  margin-bottom: unit(1/2);
+}
+h3,
+.h3 {
+  font-size: font-size($font-size-h3);
+  font-weight: $font-weight-headings;
+  margin: 0;
+  margin-top: unit(1/8);
+  margin-bottom: unit(1/4);
+}
+h4,
+.h4 {
+  font-size: font-size($font-size-h4);
+  font-weight: $font-weight-headings;
+  margin: 0;
+  margin-top: unit(1/16);
+  margin-bottom: unit(1/8);
+}
+h5,
+.h5 {
+  font-size: font-size($font-size-h5);
+  font-weight: $font-weight-headings;
+  margin: 0;
+}
+h6,
+.h6 {
+  font-size: font-size($font-size-h6);
+  font-weight: $font-weight-headings;
+  margin: 0;
+}
+
+a.h1,
+a.h2,
+a.h3,
+a.h4,
+a.h5,
+a.h6,
+a.button {
+  display: block;
+}
+
+
+b,
+strong {
+  font-weight: $font-weight-bold;
+}
+
+
+p {
+  margin: 0;
+  margin-bottom: unit(1/2);
+}
+
+
+.underlined {
+  border-bottom: unit(1/16) solid $color-black;
+}
+
+hr {
+  margin: 0;
+  padding: 0;
+  border: none;
+  
+  border-top: unit(1/16) solid $gray-500;
+  margin-top: unit(1/4) - unit(1/16);
+  padding-top: unit(1/4) - unit(1/16);
+}
+
+h1.underlined {
+  padding-bottom: unit(1/4);
+}
+
+h2.underlined {
+  padding-bottom: unit(1/4);
+}
+
+h3.underlined {
+  padding-bottom: unit(1/8);
+}
+
+h4.underlined {
+  padding-bottom: unit(1/16);
+}
+
+
+.text-underline {
+  text-decoration: underline;
+}
+
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+
+.text-danger {
+  color: $red;
+}
+
+.text-muted {
+  color: $gray-400;
+}
+
+
+.text-lg {
+  font-size: $font-size-lg;
+}
+
+.text-sm {
+  font-size: $font-size-sm;
+}

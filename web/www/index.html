@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Ai</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/public/bundle.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="header__left">
+      <button class="header__button js-btn-new"><span class="icon-new"></span> New</button>
+      <button class="header__button js-btn-save"><span class="icon-save"></span> Save</button>
+      <button class="header__button js-btn-load"><span class="icon-load"></span> Load</button>
+      <input type="file" id="js-input-load" style="display:none;" />
+    </div>
+    <h1 class="header__title">Graph</h1>
+    <div class="header__right">
+      <button class="header__button js-btn-about"><span class="icon-about"></span> About</button>
+    </div>
+  </header>
+  <main class="main">
+    <div class="main__display" id="js-cy"></div>
+    <ul class="main__ui">
+      <li>
+        <h2>Add a node</h2>
+        <input type="text" value="" id="js-input-node-name" placeholder="Name"  /><br/>
+        <button type="button" id="js-btn-node-add">Add node</button>
+      </li>
+      <li>
+        <h2>Add an edge</h2>
+        <input type="text" value="" id="js-input-edge-u" placeholder="Name of U" />
+        <input type="text" value="" id="js-input-edge-v" placeholder="Name of V" /><br/>
+        <input type="text" value="" id="js-input-edge-weight" placeholder="Weight" /><br/>
+        <button type="button" id="js-btn-edge-add">Add edge</button>
+      </li>
+      <li>
+        <h2>Search</h2>
+        <input type="text" value="" id="js-input-search-start" placeholder="Name of start" /><br/>
+        <input type="text" value="" id="js-input-search-end" placeholder="Name of end" /><br/>
+        <button type="button" id="js-btn-dfs">Run DFS</button>
+        <button type="button" id="js-btn-bfs">Run BFS</button>
+      </li>
+    </ul>
+  </main>
+
+  <script src="/public/bundle.js"></script>
+</body>
+</html>
