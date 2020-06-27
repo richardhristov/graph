@@ -43824,17 +43824,30 @@ var cy; // New button event listener
 
 (0, _jquery.default)(document).on("click", "#js-btn-node-add", function (e) {
   var name = (0, _jquery.default)("#js-input-node-name").val();
+  var x = parseInt((0, _jquery.default)("#js-input-node-x").val());
+  var y = parseInt((0, _jquery.default)("#js-input-node-y").val());
 
   if (!name) {
     window.alert("Please input the name for the node");
     return;
   }
 
+  if (isNaN(x) || isNaN(y)) {
+    window.alert("Please input valid values for x and y");
+    return;
+  }
+
   (0, _jquery.default)("#js-input-node-name").val("");
+  (0, _jquery.default)("#js-input-node-x").val("");
+  (0, _jquery.default)("#js-input-node-y").val("");
   cy.add({
     group: "nodes",
     data: {
       id: name
+    },
+    position: {
+      x: x,
+      y: y
     }
   });
   elementAdded();
@@ -43880,13 +43893,21 @@ var getFormulaWeight = function getFormulaWeight(e, dist) {
   return dist * 0.8 + parseInt(e.data("weight")) * 0.6;
 };
 
+var getDistance = function getDistance(u, v) {
+  var x1 = u.position("x");
+  var y1 = u.position("y");
+  var x2 = v.position("x");
+  var y2 = v.position("y");
+  return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+};
+
 var getAdjacentNodesAlt = function getAdjacentNodesAlt(u, startNode, endNode) {
-  var path = bfs(u, endNode, false);
-  var dist = path ? getPathWeight(u, endNode, path) : 2147483647;
   return cy.edges().filter(function (e) {
     return e.source().id() === u.id() || e.target().id() === u.id();
   }).map(function (e) {
     var uu = e.source().id() === u.id() ? e.target() : e.source();
+    var dist = getDistance(uu, endNode);
+    console.log("dist", dist);
     return [uu, getFormulaWeight(e, dist)];
   });
 };
@@ -43910,6 +43931,7 @@ var clearColoring = function clearColoring() {
   try {
     for (_iterator.s(); !(_step = _iterator.n()).done;) {
       var u = _step.value;
+      u.data("coloring", "none");
       u.removeData("coloring");
     }
   } catch (err) {
@@ -43920,8 +43942,7 @@ var clearColoring = function clearColoring() {
 };
 
 var bfs = function bfs(startNode, endNode) {
-  var colorVisited = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-  var adjacencyFn = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : getAdjacentNodes;
+  var adjacencyFn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : getAdjacentNodes;
   var visited = [];
   var path = {};
   var found = false;
@@ -43935,9 +43956,12 @@ var bfs = function bfs(startNode, endNode) {
     var u = queue.shift();
     visited.push(u.id());
     console.log("BFS popping", u.id());
+    u.data("coloring", "visited");
 
-    if (colorVisited) {
-      u.data("coloring", "visited");
+    if (u === endNode) {
+      console.log("BFS found end");
+      found = true;
+      break;
     }
 
     var adj = adjacencyFn(u, startNode, endNode).filter(function (vv) {
@@ -43957,13 +43981,6 @@ var bfs = function bfs(startNode, endNode) {
             weight = _step2$value[1];
 
         path[v.id()] = u.id();
-
-        if (v === endNode) {
-          console.log("BFS found end");
-          found = true;
-          break;
-        }
-
         queue.push(v);
       }
     } catch (err) {
@@ -44047,7 +44064,7 @@ var getPathWeight = function getPathWeight(startNode, endNode, path) {
   window.startNode = startNode;
   window.endNode = endNode;
   var visited = [];
-  var l = 1;
+  var l = 0;
 
   var dfs = function dfs(u) {
     u.data("coloring", "visited");
@@ -44153,7 +44170,7 @@ var getPathWeight = function getPathWeight(startNode, endNode, path) {
     return;
   }
 
-  var path = bfs(startNode, endNode, true, getAdjacentNodesAlt);
+  var path = bfs(startNode, endNode, getAdjacentNodesAlt);
 
   if (path) {
     colorPath(startNode, endNode, path);
@@ -44165,11 +44182,8 @@ var getPathWeight = function getPathWeight(startNode, endNode, path) {
   window.alert("No path was found");
 });
 
-var elementAdded = function elementAdded() {
-  var layout = cy.elements().layout({
-    name: "random"
-  });
-  layout.run();
+var elementAdded = function elementAdded() {//var layout = cy.elements().layout({ name: "random" });
+  //layout.run();
 };
 
 var init = function init(data) {
@@ -44190,11 +44204,9 @@ var init = function init(data) {
           switch (el.data("coloring")) {
             case "visited":
               return "#00F";
-              break;
 
             case "path":
               return "#F00";
-              break;
 
             default:
               return "#222";
@@ -44210,6 +44222,9 @@ var init = function init(data) {
         "text-margin-y": -10
       }
     }],
+    layout: {
+      name: "preset"
+    },
     elements: data
   });
   clearColoring();
@@ -44276,7 +44291,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65382" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58370" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

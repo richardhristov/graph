@@ -84,16 +84,29 @@ $(document).on("click", ".js-btn-about", (e) => {
 // Add node button even listener
 $(document).on("click", "#js-btn-node-add", (e) => {
 	const name = $("#js-input-node-name").val();
+	const x = parseInt($("#js-input-node-x").val());
+	const y = parseInt($("#js-input-node-y").val());
 	if (!name) {
 		window.alert("Please input the name for the node");
 		return;
 	}
 
+	if (isNaN(x) || isNaN(y)) {
+		window.alert("Please input valid values for x and y");
+		return;
+	}
+
 	$("#js-input-node-name").val("");
+	$("#js-input-node-x").val("");
+	$("#js-input-node-y").val("");
 	cy.add({
 		group: "nodes",
 		data: {
 			id: name,
+		},
+		position: {
+			x,
+			y,
 		},
 	});
 	elementAdded();
@@ -139,14 +152,22 @@ const getFormulaWeight = (e, dist) => {
 	return dist * 0.8 + parseInt(e.data("weight")) * 0.6;
 };
 
+const getDistance = (u, v) => {
+	const x1 = u.position("x");
+	const y1 = u.position("y");
+	const x2 = v.position("x");
+	const y2 = v.position("y");
+	return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+};
+
 const getAdjacentNodesAlt = (u, startNode, endNode) => {
-	const path = bfs(u, endNode, false);
-	const dist = path ? getPathWeight(u, endNode, path) : 2147483647;
 	return cy
 		.edges()
 		.filter((e) => e.source().id() === u.id() || e.target().id() === u.id())
 		.map((e) => {
 			const uu = e.source().id() === u.id() ? e.target() : e.source();
+			const dist = getDistance(uu, endNode);
+			console.log("dist", dist);
 			return [uu, getFormulaWeight(e, dist)];
 		});
 };
@@ -167,16 +188,12 @@ const getNodeById = (id) => {
 
 const clearColoring = () => {
 	for (const u of cy.nodes()) {
+		u.data("coloring", "none");
 		u.removeData("coloring");
 	}
 };
 
-const bfs = (
-	startNode,
-	endNode,
-	colorVisited = true,
-	adjacencyFn = getAdjacentNodes
-) => {
+const bfs = (startNode, endNode, adjacencyFn = getAdjacentNodes) => {
 	const visited = [];
 	const path = {};
 	let found = false;
@@ -189,8 +206,12 @@ const bfs = (
 		const u = queue.shift();
 		visited.push(u.id());
 		console.log("BFS popping", u.id());
-		if (colorVisited) {
-			u.data("coloring", "visited");
+		u.data("coloring", "visited");
+
+		if (u === endNode) {
+			console.log("BFS found end");
+			found = true;
+			break;
 		}
 
 		const adj = adjacencyFn(u, startNode, endNode)
@@ -201,12 +222,6 @@ const bfs = (
 
 		for (const [v, weight] of adj) {
 			path[v.id()] = u.id();
-			if (v === endNode) {
-				console.log("BFS found end");
-				found = true;
-				break;
-			}
-
 			queue.push(v);
 		}
 	}
@@ -271,7 +286,7 @@ $(document).on("click", "#js-btn-dfs", (e) => {
 	window.endNode = endNode;
 
 	const visited = [];
-	let l = 1;
+	let l = 0;
 	const dfs = (u) => {
 		u.data("coloring", "visited");
 		visited.push(u.id());
@@ -356,7 +371,7 @@ $(document).on("click", "#js-btn-bfs-alt", (e) => {
 		return;
 	}
 
-	const path = bfs(startNode, endNode, true, getAdjacentNodesAlt);
+	const path = bfs(startNode, endNode, getAdjacentNodesAlt);
 
 	if (path) {
 		colorPath(startNode, endNode, path);
@@ -368,8 +383,8 @@ $(document).on("click", "#js-btn-bfs-alt", (e) => {
 });
 
 const elementAdded = () => {
-	var layout = cy.elements().layout({ name: "random" });
-	layout.run();
+	//var layout = cy.elements().layout({ name: "random" });
+	//layout.run();
 };
 
 const init = (data) => {
@@ -391,11 +406,9 @@ const init = (data) => {
 						switch (el.data("coloring")) {
 							case "visited":
 								return "#00F";
-								break;
 
 							case "path":
 								return "#F00";
-								break;
 
 							default:
 								return "#222";
@@ -413,6 +426,10 @@ const init = (data) => {
 				},
 			},
 		],
+
+		layout: {
+			name: "preset",
+		},
 
 		elements: data,
 	});
