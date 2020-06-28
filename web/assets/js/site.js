@@ -218,7 +218,7 @@ const bfs = (startNode, endNode, adjacencyFn = getAdjacentNodes) => {
 			break;
 		}
 
-		const u = queue.shift();
+		const u = queue.pop();
 		visited.push(u.id());
 		console.log("BFS popping", u.id());
 		u.data("coloring", "visited");
@@ -252,6 +252,7 @@ const bfs = (startNode, endNode, adjacencyFn = getAdjacentNodes) => {
 };
 
 const colorPath = (startNode, endNode, path) => {
+	console.log("Coloring path", path);
 	let u = endNode.id();
 	while (u !== startNode.id()) {
 		const uu = getNodeById(u);

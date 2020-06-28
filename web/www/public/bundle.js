@@ -43975,7 +43975,7 @@ var bfs = function bfs(startNode, endNode) {
       break;
     }
 
-    var u = queue.shift();
+    var u = queue.pop();
     visited.push(u.id());
     console.log("BFS popping", u.id());
     u.data("coloring", "visited");
@@ -44024,6 +44024,7 @@ var bfs = function bfs(startNode, endNode) {
 };
 
 var colorPath = function colorPath(startNode, endNode, path) {
+  console.log("Coloring path", path);
   var u = endNode.id();
 
   while (u !== startNode.id()) {
