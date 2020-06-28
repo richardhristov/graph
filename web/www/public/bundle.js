@@ -43732,6 +43732,14 @@ var _cytoscape = _interopRequireDefault(require("cytoscape"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -43826,6 +43834,7 @@ var cy; // New button event listener
   var name = (0, _jquery.default)("#js-input-node-name").val();
   var x = parseInt((0, _jquery.default)("#js-input-node-x").val());
   var y = parseInt((0, _jquery.default)("#js-input-node-y").val());
+  var weight = parseInt((0, _jquery.default)("#js-input-node-weight").val());
 
   if (!name) {
     window.alert("Please input the name for the node");
@@ -43840,10 +43849,12 @@ var cy; // New button event listener
   (0, _jquery.default)("#js-input-node-name").val("");
   (0, _jquery.default)("#js-input-node-x").val("");
   (0, _jquery.default)("#js-input-node-y").val("");
+  (0, _jquery.default)("#js-input-node-weight").val("");
   cy.add({
     group: "nodes",
     data: {
-      id: name
+      id: name,
+      weight: weight
     },
     position: {
       x: x,
@@ -43909,6 +43920,17 @@ var getAdjacentNodesAlt = function getAdjacentNodesAlt(u, startNode, endNode) {
     var dist = getDistance(uu, endNode);
     console.log("dist", dist);
     return [uu, getFormulaWeight(e, dist)];
+  });
+};
+
+var getAdjacentNodesAlt2 = function getAdjacentNodesAlt2(u, startNode, endNode) {
+  return cy.edges().filter(function (e) {
+    return e.source().id() === u.id() || e.target().id() === u.id();
+  }).map(function (e) {
+    var uu = e.source().id() === u.id() ? e.target() : e.source();
+    var dist = getDistance(uu, endNode);
+    console.log("dist", dist);
+    return [uu, getFormulaWeight(uu, dist)];
   });
 };
 
@@ -43980,8 +44002,12 @@ var bfs = function bfs(startNode, endNode) {
             v = _step2$value[0],
             weight = _step2$value[1];
 
+        if (queue.indexOf(v) !== -1 || visited.indexOf(v.id()) !== -1) {
+          continue;
+        }
+
         path[v.id()] = u.id();
-        queue.push(v);
+        queue = [v].concat(_toConsumableArray(queue));
       }
     } catch (err) {
       _iterator2.e(err);
@@ -44171,6 +44197,37 @@ var getPathWeight = function getPathWeight(startNode, endNode, path) {
   }
 
   var path = bfs(startNode, endNode, getAdjacentNodesAlt);
+
+  if (path) {
+    colorPath(startNode, endNode, path);
+    var weight = getPathWeight(startNode, endNode, path);
+    window.alert("Path was found with total weight: ".concat(weight));
+    return;
+  }
+
+  window.alert("No path was found");
+});
+(0, _jquery.default)(document).on("click", "#js-btn-bfs-alt2", function (e) {
+  clearColoring();
+  var start = (0, _jquery.default)("#js-input-search-start").val();
+  var end = (0, _jquery.default)("#js-input-search-end").val();
+
+  if (!start || !end) {
+    window.alert("Please input the start and end for the bfs");
+    return;
+  }
+
+  (0, _jquery.default)("#js-input-search-start").val("");
+  (0, _jquery.default)("#js-input-search-end").val("");
+  var startNode = getNodeById(start);
+  var endNode = getNodeById(end);
+
+  if (!startNode || !endNode) {
+    window.alert("The start or end node doesnt exist");
+    return;
+  }
+
+  var path = bfs(startNode, endNode, getAdjacentNodesAlt2);
 
   if (path) {
     colorPath(startNode, endNode, path);

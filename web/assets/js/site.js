@@ -86,6 +86,7 @@ $(document).on("click", "#js-btn-node-add", (e) => {
 	const name = $("#js-input-node-name").val();
 	const x = parseInt($("#js-input-node-x").val());
 	const y = parseInt($("#js-input-node-y").val());
+	const weight = parseInt($("#js-input-node-weight").val());
 	if (!name) {
 		window.alert("Please input the name for the node");
 		return;
@@ -99,10 +100,12 @@ $(document).on("click", "#js-btn-node-add", (e) => {
 	$("#js-input-node-name").val("");
 	$("#js-input-node-x").val("");
 	$("#js-input-node-y").val("");
+	$("#js-input-node-weight").val("");
 	cy.add({
 		group: "nodes",
 		data: {
 			id: name,
+			weight,
 		},
 		position: {
 			x,
@@ -172,6 +175,18 @@ const getAdjacentNodesAlt = (u, startNode, endNode) => {
 		});
 };
 
+const getAdjacentNodesAlt2 = (u, startNode, endNode) => {
+	return cy
+		.edges()
+		.filter((e) => e.source().id() === u.id() || e.target().id() === u.id())
+		.map((e) => {
+			const uu = e.source().id() === u.id() ? e.target() : e.source();
+			const dist = getDistance(uu, endNode);
+			console.log("dist", dist);
+			return [uu, getFormulaWeight(uu, dist)];
+		});
+};
+
 const getConnectingEdges = (u, v) => {
 	return cy
 		.edges()
@@ -197,7 +212,7 @@ const bfs = (startNode, endNode, adjacencyFn = getAdjacentNodes) => {
 	const visited = [];
 	const path = {};
 	let found = false;
-	const queue = [startNode];
+	let queue = [startNode];
 	while (!found) {
 		if (queue.length === 0) {
 			break;
@@ -221,8 +236,11 @@ const bfs = (startNode, endNode, adjacencyFn = getAdjacentNodes) => {
 		console.log("BFS adj: ", adj);
 
 		for (const [v, weight] of adj) {
+			if (queue.indexOf(v) !== -1 || visited.indexOf(v.id()) !== -1) {
+				continue;
+			}
 			path[v.id()] = u.id();
-			queue.push(v);
+			queue = [v, ...queue];
 		}
 	}
 
@@ -372,6 +390,36 @@ $(document).on("click", "#js-btn-bfs-alt", (e) => {
 	}
 
 	const path = bfs(startNode, endNode, getAdjacentNodesAlt);
+
+	if (path) {
+		colorPath(startNode, endNode, path);
+		const weight = getPathWeight(startNode, endNode, path);
+		window.alert(`Path was found with total weight: ${weight}`);
+		return;
+	}
+	window.alert("No path was found");
+});
+
+$(document).on("click", "#js-btn-bfs-alt2", (e) => {
+	clearColoring();
+	const start = $("#js-input-search-start").val();
+	const end = $("#js-input-search-end").val();
+	if (!start || !end) {
+		window.alert("Please input the start and end for the bfs");
+		return;
+	}
+
+	$("#js-input-search-start").val("");
+	$("#js-input-search-end").val("");
+
+	const startNode = getNodeById(start);
+	const endNode = getNodeById(end);
+	if (!startNode || !endNode) {
+		window.alert("The start or end node doesnt exist");
+		return;
+	}
+
+	const path = bfs(startNode, endNode, getAdjacentNodesAlt2);
 
 	if (path) {
 		colorPath(startNode, endNode, path);
