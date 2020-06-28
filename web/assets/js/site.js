@@ -313,7 +313,7 @@ $(document).on("click", "#js-btn-dfs", (e) => {
 	};
 
 	const result = dfs(startNode);
-	if (result) {
+	if (result > 0) {
 		window.alert(`Path was found with total weight: ${result}, length: ${l}`);
 		return;
 	}

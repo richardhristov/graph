@@ -44110,7 +44110,7 @@ var getPathWeight = function getPathWeight(startNode, endNode, path) {
 
   var result = dfs(startNode);
 
-  if (result) {
+  if (result > 0) {
     window.alert("Path was found with total weight: ".concat(result, ", length: ").concat(l));
     return;
   }
@@ -44291,7 +44291,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58370" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49802" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
